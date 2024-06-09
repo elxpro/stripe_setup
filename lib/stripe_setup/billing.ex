@@ -138,15 +138,16 @@ defmodule StripeSetup.Billing do
 
   ## Examples
 
-      iex> create_plan(%{field: value})
+      iex> create_plan(product, %{field: value})
       {:ok, %Plan{}}
 
-      iex> create_plan(%{field: bad_value})
+      iex> create_plan(product, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_plan(attrs \\ %{}) do
-    %Plan{}
+  def create_plan(product, attrs \\ %{}) do
+    product
+    |> Ecto.build_assoc(:plans)
     |> Plan.changeset(attrs)
     |> Repo.insert()
   end

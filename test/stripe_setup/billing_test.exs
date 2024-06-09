@@ -3,12 +3,12 @@ defmodule StripeSetup.BillingTest do
 
   alias StripeSetup.Billing
 
+  @invalid_product_attrs %{stripe_id: nil, stripe_product_name: nil}
+
   describe "products" do
     alias StripeSetup.Billing.Product
 
     import StripeSetup.BillingFixtures
-
-    @invalid_attrs %{stripe_id: nil, stripe_product_name: nil}
 
     test "list_products/0 returns all products" do
       product = product_fixture()
@@ -21,7 +21,10 @@ defmodule StripeSetup.BillingTest do
     end
 
     test "create_product/1 with valid data creates a product" do
-      valid_attrs = %{stripe_id: "some stripe_id", stripe_product_name: "some stripe_product_name"}
+      valid_attrs = %{
+        stripe_id: "some stripe_id",
+        stripe_product_name: "some stripe_product_name"
+      }
 
       assert {:ok, %Product{} = product} = Billing.create_product(valid_attrs)
       assert product.stripe_id == "some stripe_id"
@@ -29,12 +32,16 @@ defmodule StripeSetup.BillingTest do
     end
 
     test "create_product/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Billing.create_product(@invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = Billing.create_product(@invalid_product_attrs)
     end
 
     test "update_product/2 with valid data updates the product" do
       product = product_fixture()
-      update_attrs = %{stripe_id: "some updated stripe_id", stripe_product_name: "some updated stripe_product_name"}
+
+      update_attrs = %{
+        stripe_id: "some updated stripe_id",
+        stripe_product_name: "some updated stripe_product_name"
+      }
 
       assert {:ok, %Product{} = product} = Billing.update_product(product, update_attrs)
       assert product.stripe_id == "some updated stripe_id"
@@ -43,7 +50,7 @@ defmodule StripeSetup.BillingTest do
 
     test "update_product/2 with invalid data returns error changeset" do
       product = product_fixture()
-      assert {:error, %Ecto.Changeset{}} = Billing.update_product(product, @invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = Billing.update_product(product, @invalid_product_attrs)
       assert product == Billing.get_product!(product.id)
     end
 
@@ -77,21 +84,33 @@ defmodule StripeSetup.BillingTest do
     end
 
     test "create_plan/1 with valid data creates a plan" do
-      valid_attrs = %{amount: 42, stripe_id: "some stripe_id", stripe_plan_name: "some stripe_plan_name"}
+      valid_attrs = %{
+        amount: 42,
+        stripe_id: "some stripe_id",
+        stripe_plan_name: "some stripe_plan_name"
+      }
 
-      assert {:ok, %Plan{} = plan} = Billing.create_plan(valid_attrs)
+      product = product_fixture()
+      assert {:ok, %Plan{} = plan} = Billing.create_plan(product, valid_attrs)
       assert plan.amount == 42
       assert plan.stripe_id == "some stripe_id"
       assert plan.stripe_plan_name == "some stripe_plan_name"
     end
 
     test "create_plan/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Billing.create_plan(@invalid_attrs)
+      product = product_fixture()
+
+      assert {:error, %Ecto.Changeset{}} = Billing.create_plan(product, @invalid_attrs)
     end
 
     test "update_plan/2 with valid data updates the plan" do
       plan = plan_fixture()
-      update_attrs = %{amount: 43, stripe_id: "some updated stripe_id", stripe_plan_name: "some updated stripe_plan_name"}
+
+      update_attrs = %{
+        amount: 43,
+        stripe_id: "some updated stripe_id",
+        stripe_plan_name: "some updated stripe_plan_name"
+      }
 
       assert {:ok, %Plan{} = plan} = Billing.update_plan(plan, update_attrs)
       assert plan.amount == 43
