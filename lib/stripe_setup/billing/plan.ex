@@ -9,7 +9,7 @@ defmodule StripeSetup.Billing.Plan do
     field :stripe_id, :string
     field :stripe_plan_name, :string
     belongs_to :product, StripeSetup.Billing.Product, foreign_key: :billing_product_id
-
+    has_many :subscriptions, StripeSetup.Billing.Subscription
     timestamps()
   end
 

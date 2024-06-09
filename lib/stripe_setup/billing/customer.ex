@@ -8,6 +8,7 @@ defmodule StripeSetup.Billing.Customer do
     field :default_source, :string
     field :stripe_id, :string
     belongs_to :user, StripeSetup.Accounts.User
+    has_many :subscriptions, StripeSetup.Billing.Subscription
     timestamps()
   end
 

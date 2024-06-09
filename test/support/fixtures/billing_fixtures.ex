@@ -52,4 +52,21 @@ defmodule StripeSetup.BillingFixtures do
 
     customer
   end
+
+  @doc """
+  Generate a subscription.
+  """
+  def subscription_fixture(attrs \\ %{}) do
+    {:ok, subscription} =
+      attrs
+      |> Enum.into(%{
+        cancel_at: ~N[2024-06-08 19:24:00],
+        current_period_end_at: ~N[2024-06-08 19:24:00],
+        status: "some status",
+        stripe_id: "some stripe_id"
+      })
+      |> StripeSetup.Billing.create_subscription()
+
+    subscription
+  end
 end
