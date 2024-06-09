@@ -37,4 +37,19 @@ defmodule StripeSetup.BillingFixtures do
 
     plan
   end
+
+  @doc """
+  Generate a customer.
+  """
+  def customer_fixture(attrs \\ %{}) do
+    {:ok, customer} =
+      attrs
+      |> Enum.into(%{
+        default_source: "some default_source",
+        stripe_id: "some stripe_id"
+      })
+      |> StripeSetup.Billing.create_customer()
+
+    customer
+  end
 end
