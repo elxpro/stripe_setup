@@ -16,7 +16,7 @@ defmodule StripeSetup.Billing.Customer do
   def changeset(customer, attrs) do
     customer
     |> cast(attrs, [:stripe_id, :default_source])
-    |> validate_required([:stripe_id, :default_source])
+    |> validate_required([:stripe_id])
     |> unique_constraint(:stripe_id, name: :billing_customers_stripe_id_index)
   end
 end

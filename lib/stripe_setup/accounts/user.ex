@@ -1,6 +1,8 @@
 defmodule StripeSetup.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  alias StripeSetup.Billing.Customer
+
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "users" do
@@ -8,6 +10,7 @@ defmodule StripeSetup.Accounts.User do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
+    has_one :billing_customer, Customer
 
     timestamps()
   end

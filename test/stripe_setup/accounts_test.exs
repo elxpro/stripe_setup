@@ -505,4 +505,14 @@ defmodule StripeSetup.AccountsTest do
       refute inspect(%User{password: "123456"}) =~ "password: \"123456\""
     end
   end
+
+  describe "subscribe_on_user_created" do
+    test "when the user is created it creates a stripe_customer and billing_customer" do
+      Accounts.subscribe_on_user_created()
+
+      email = unique_user_email()
+      {:ok, user} = Accounts.register_user(%{email: email, password: valid_user_password()})
+      assert_received(%{user: ^user})
+    end
+  end
 end
