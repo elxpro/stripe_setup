@@ -4,9 +4,12 @@ defmodule StripeSetup.Application do
   @moduledoc false
 
   use Application
+  alias StripeSetup.Billing.CreateStripeCustomer
 
   @impl true
   def start(_type, _args) do
+    create_stripe_customer_service = get_create_stripe_customer_service(Mix.env())
+
     children = [
       # Start the Telemetry supervisor
       StripeSetupWeb.Telemetry,
@@ -17,7 +20,8 @@ defmodule StripeSetup.Application do
       # Start Finch
       {Finch, name: StripeSetup.Finch},
       # Start the Endpoint (http/https)
-      StripeSetupWeb.Endpoint
+      StripeSetupWeb.Endpoint,
+      create_stripe_customer_service
       # Start a worker by calling: StripeSetup.Worker.start_link(arg)
       # {StripeSetup.Worker, arg}
     ]
@@ -35,4 +39,7 @@ defmodule StripeSetup.Application do
     StripeSetupWeb.Endpoint.config_change(changed, removed)
     :ok
   end
+
+  defp get_create_stripe_customer_service(:test), do: CreateStripeCustomer.Mock
+  defp get_create_stripe_customer_service(_), do: CreateStripeCustomer.Server
 end

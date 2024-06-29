@@ -34,3 +34,5 @@ config :logger, level: :warning
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :stripe_setup, stripe_service: MockStripe
