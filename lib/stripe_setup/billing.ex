@@ -390,4 +390,16 @@ defmodule StripeSetup.Billing do
   def change_subscription(%Subscription{} = subscription, attrs \\ %{}) do
     Subscription.changeset(subscription, attrs)
   end
+
+  @doc """
+  Gets a single product by stripe_id.
+  Raises `Ecto.NoResultsError` if the Product does not exist.
+  ## Examples
+  iex> get_product_by_stripe_id!("prod_IBuHQ")
+  %Product{}
+
+  iex> get_product!("prod_xxx")
+  ** (Ecto.NoResultsError)
+  """
+  def get_product_by_stripe_id!(stripe_id), do: Repo.get_by!(Product, stripe_id: stripe_id)
 end
