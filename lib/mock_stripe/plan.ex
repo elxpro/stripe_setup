@@ -17,6 +17,7 @@ defmodule MockStripe.Plan do
 
   alias MockStripe.List
   alias MockStripe.Plan
+  alias MockStripe.Product
 
   def retrieve() do
     stripe_id = "price_#{MockStripe.token()}"
@@ -34,7 +35,7 @@ defmodule MockStripe.Plan do
       interval_count: 1,
       nickname: "One year membership",
       object: "plan",
-      product: "prod_I2TE8siyANz84p",
+      product: Product.get_product_id(),
       usage_type: "licensed"
     }
   end

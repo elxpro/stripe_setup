@@ -10,9 +10,12 @@ defmodule MockStripe.Product do
   alias MockStripe.List
   alias MockStripe.Product
 
+  @product_id "prod_#{MockStripe.token()}"
+
+  def get_product_id, do: @product_id
+
   def retrieve() do
-    stripe_id = "prod_#{MockStripe.token()}"
-    retrieve(stripe_id)
+    retrieve(@product_id)
   end
 
   def retrieve("prod_" <> _ = stripe_id) do
