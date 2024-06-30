@@ -60,7 +60,8 @@ defmodule StripeSetup.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:stripity_stripe, "~> 2.0"},
       {:excoveralls, "~> 0.18", only: :test},
-      {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false}
+      {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:money, "~> 1.12"}
     ]
   end
 

@@ -413,4 +413,23 @@ defmodule StripeSetup.Billing do
     product_or_products
     |> Repo.preload(:plans)
   end
+
+  def list_products_by_plan(plan) do
+    Product
+    |> join(:inner, [p], plan in assoc(p, :plans))
+    |> select([p, plan], %{
+      id: p.id,
+      stripe_id: p.stripe_id,
+      stripe_product_name: p.stripe_product_name,
+      plan: %{
+        id: plan.id,
+        amount: plan.amount,
+        stripe_id: plan.stripe_id,
+        stripe_plan_name: plan.stripe_plan_name
+      }
+    })
+    |> where([_, p], p.stripe_plan_name == ^plan)
+    |> order_by([_, p], asc: p.amount)
+    |> Repo.all()
+  end
 end
