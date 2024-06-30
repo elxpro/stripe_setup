@@ -5,10 +5,9 @@ defmodule StripeSetup.BillingTest do
 
   @invalid_product_attrs %{stripe_id: nil, stripe_product_name: nil}
   import StripeSetup.BillingFixtures
+  alias StripeSetup.Billing.Product
 
   describe "products" do
-    alias StripeSetup.Billing.Product
-
     test "list_products/0 returns all products" do
       product = product_fixture()
       assert Billing.list_products() == [product]
@@ -274,5 +273,17 @@ defmodule StripeSetup.BillingTest do
   test "get_product_by_stripe_id!/1 returns the product with given stripe_id" do
     product = product_fixture()
     assert Billing.get_product_by_stripe_id!(product.stripe_id) == product
+  end
+
+  describe "with_plans/1" do
+    test " loads the plans for a specific product" do
+      product = product_fixture()
+      assert %Product{plans: []} = Billing.with_plans(product)
+    end
+
+    test " loads the plans for a list of products" do
+      product = product_fixture()
+      assert [%Product{plans: []}] = Billing.with_plans([product])
+    end
   end
 end

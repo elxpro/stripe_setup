@@ -402,4 +402,15 @@ defmodule StripeSetup.Billing do
   ** (Ecto.NoResultsError)
   """
   def get_product_by_stripe_id!(stripe_id), do: Repo.get_by!(Product, stripe_id: stripe_id)
+
+  @doc """
+  Preload plans for a product or a list of products.
+  ## Examples
+  iex> with_plans(%Product{})
+  %Product{plans: [%Plan{}]}
+  """
+  def with_plans(product_or_products) do
+    product_or_products
+    |> Repo.preload(:plans)
+  end
 end
