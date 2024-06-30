@@ -25,9 +25,9 @@ defmodule MockStripe.Customer do
   def retrieve("cus_" <> _ = stripe_id) do
     %Customer{
       created: 1_600_892_385,
-      email: "andreas@codered.se",
+      email: "gus@elxpro.com",
       id: stripe_id,
-      name: "Andreas Eriksson",
+      name: "Gus Oli",
       object: "customer"
     }
   end
