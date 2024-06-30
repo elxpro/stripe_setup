@@ -1,23 +1,35 @@
 defmodule StripeSetupWeb.PricingLive.Index do
   use StripeSetupWeb, :live_view
+  alias StripeSetup.Billing
+  alias StripeSetupWeb.PricingLive.ProductComponent
 
-  def card(assigns) do
-    ~H"""
-    <div class="hover:bg-blue-200 bg-blue-100 transition-all p-2 rounded-lg">
-      <p class="mb-1 text-xs font-semibold tracking-wide text-gray-500 uppercase">
-        <%= @name %>
-      </p>
-      <h1 class="mb-2 text-4xl font-bold leading-tight text-gray-900 md:font-extrabold">
-        <%= @price %>
-        <span class="text-2xl font-medium text-gray-600"> per month</span>
-      </h1>
-      <p class="text-lg text-gray-600 mb-12">
-        <%= @description %>
-      </p>
-      <div class="mt-6 pb-8 justify-center block md:flex space-x-0 md:space-x-2 space-y-2 md:space-y-0">
-        <a href="#" class="w-full bg-blue-800 text-white p-2 rounded-full md:w-auto">Get Started</a>
-      </div>
-    </div>
-    """
+  @impl true
+  def mount(_params, _session, socket) do
+    {:ok, assign(socket, :products, [])}
   end
+
+  def handle_params(params, _, socket) do
+    interval = params["interval"] || "monthly"
+    {:noreply, assign(socket, :interval, interval)}
+  end
+
+  # def plan_price_for_interval(plans, interval \\ "month") do
+  #   plans
+  #   |> Enum.find(&(&1.stripe_plan_name == interval))
+  #   |> (fn plan -> plan || %{} end).()
+  #   |> Map.get(:amount)
+  # end
+
+  # defp get_products() do
+  #   Billing.list_products()
+  #   |> Billing.with_plans()
+  #   |> IO.inspect()
+  #   |> Enum.sort_by(&cheapest_plan_price/1)
+  # end
+
+  # defp cheapest_plan_price(product) do
+  #   product.plans
+  #   |> Enum.map(& &1.amount)
+  #   |> Enum.min()
+  # end
 end

@@ -2,16 +2,33 @@
   Plans & Pricing
 </h1>
 <div class="flex mt-4 justify-between p-2 text-center border border-blue-200 rounded-full">
-  <button class="w-full rounded-full bg-blue-800 text-white">
+  <.link
+    patch={~p"/pricings?interval=monthly"}
+    class={[
+      (@interval == "monthly" && "w-full rounded-full bg-blue-800 text-white") ||
+        "w-full rounded-full hover:bg-blue-800 hover:text-white transition-all"
+    ]}
+  >
     Bill Monthly
-  </button>
-  <button class="w-full rounded-full hover:bg-blue-800 hover:text-white transition-all">
+  </.link>
+  <.link
+    patch={~p"/pricings?interval=yearly"}
+    class={[
+      (@interval == "yearly" && "w-full rounded-full bg-blue-800 text-white") ||
+        "w-full rounded-full hover:bg-blue-800 hover:text-white transition-all"
+    ]}
+  >
     Bill Yearly
-  </button>
+  </.link>
 </div>
 <section class="container px-4 py-12 mx-auto text-left md:text-center bg-white-100">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <.card name="Standard Plan" price="$10" description="..." />
-    <.card name="Premium Plan" price="$20" description="Bruno Gay" />
+    alias StripeSetupWeb.PricingLive.ProductComponent
+    <.live_component
+      :for={product <- @products}
+      module={ProductComponent}
+      id={product.id}
+      product={product}
+    />
   </div>
 </section>
