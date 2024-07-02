@@ -2,12 +2,15 @@ defmodule StripeSetup.Billing.SynchronizePlansTest do
   use StripeSetup.DataCase
   alias StripeSetup.Billing
   alias StripeSetup.Billing.SynchronizePlans
+  @stripe_service Application.compile_env(:stripe_setup, :stripe_service)
 
   def create_product(_) do
+    {:ok, %{data: [plan | _rest]}} = @stripe_service.Plan.list(%{active: true})
+
     {:ok, product} =
       Billing.create_product(%{
         stripe_product_name: "Standard Product",
-        stripe_id: "prod_I2TE8siyANz84p"
+        stripe_id: plan.product
       })
 
     %{product: product}
