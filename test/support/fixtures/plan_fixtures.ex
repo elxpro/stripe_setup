@@ -2,7 +2,7 @@ defmodule StripeSetup.PlanFixtures do
   @doc """
   Generate a plan.
   """
-  import StripeSetup.BillingFixtures
+  import StripeSetup.ProductFixtures
 
   def plan_fixture(attrs \\ %{}) do
     product = product_fixture()

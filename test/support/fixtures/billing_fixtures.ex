@@ -5,21 +5,6 @@ defmodule StripeSetup.BillingFixtures do
   """
 
   @doc """
-  Generate a product.
-  """
-  def product_fixture(attrs \\ %{}) do
-    {:ok, product} =
-      attrs
-      |> Enum.into(%{
-        stripe_id: "some stripe_id",
-        stripe_product_name: "some stripe_product_name"
-      })
-      |> StripeSetup.Billing.create_product()
-
-    product
-  end
-
-  @doc """
   Generate a customer.
   """
   def customer_fixture(attrs \\ %{}) do

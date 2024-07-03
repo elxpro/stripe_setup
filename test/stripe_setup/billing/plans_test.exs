@@ -5,7 +5,7 @@ defmodule StripeSetup.Billing.PlansTest do
     alias StripeSetup.Billing.Plans.Plan
     alias StripeSetup.Billing.Plans
 
-    import StripeSetup.BillingFixtures
+    import StripeSetup.ProductFixtures
     import StripeSetup.PlanFixtures
 
     @invalid_attrs %{amount: nil, stripe_id: nil, stripe_plan_name: nil}
