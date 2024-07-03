@@ -21,7 +21,8 @@ defmodule MockStripe.Plan do
     :tiers_mode,
     :transform_usage,
     :trial_period_days,
-    :usage_type
+    :usage_type,
+    :name
   ]
 
   def retrieve, do: retrieve("price_#{MockStripe.token()}")
@@ -29,6 +30,7 @@ defmodule MockStripe.Plan do
   def retrieve("price_" <> _ = stripe_id) do
     %__MODULE__{
       active: true,
+      name: "premium",
       amount: 9900,
       amount_decimal: "9000",
       currency: "usd",

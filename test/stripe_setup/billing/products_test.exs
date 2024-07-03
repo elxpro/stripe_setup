@@ -66,5 +66,10 @@ defmodule StripeSetup.Billing.ProductsTest do
       product = product_fixture()
       assert %Ecto.Changeset{} = Products.change_product(product)
     end
+
+    test "get_product_by_stripe_id!" do
+      product = product_fixture()
+      assert Products.get_product_by_stripe_id!(product.stripe_id) == product
+    end
   end
 end
