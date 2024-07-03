@@ -64,6 +64,7 @@ config :phoenix, :json_library, Jason
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
 
-
 config :stripity_stripe,
   api_key: System.get_env("STRIPE_SECRET_KEY") || "123"
+
+config :stripe_setup, stripe_service: Stripe
