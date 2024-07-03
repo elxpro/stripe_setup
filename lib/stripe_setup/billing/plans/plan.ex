@@ -1,4 +1,4 @@
-defmodule StripeSetup.Billing.Plan do
+defmodule StripeSetup.Billing.Plans.Plan do
   use Ecto.Schema
   import Ecto.Changeset
 

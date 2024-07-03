@@ -7,7 +7,7 @@ defmodule StripeSetup.Billing.Product do
   schema "billing_products" do
     field :stripe_id, :string
     field :stripe_product_name, :string
-    has_many :plans, StripeSetup.Billing.Plan, foreign_key: :billing_product_id
+    has_many :plans, StripeSetup.Billing.Plans.Plan, foreign_key: :billing_product_id
     timestamps()
   end
 

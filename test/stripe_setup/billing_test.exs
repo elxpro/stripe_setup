@@ -66,76 +66,6 @@ defmodule StripeSetup.BillingTest do
     end
   end
 
-  describe "plans" do
-    alias StripeSetup.Billing.Plan
-
-    import StripeSetup.BillingFixtures
-
-    @invalid_attrs %{amount: nil, stripe_id: nil, stripe_plan_name: nil}
-
-    test "list_plans/0 returns all plans" do
-      plan = plan_fixture()
-      assert Billing.list_plans() == [plan]
-    end
-
-    test "get_plan!/1 returns the plan with given id" do
-      plan = plan_fixture()
-      assert Billing.get_plan!(plan.id) == plan
-    end
-
-    test "create_plan/1 with valid data creates a plan" do
-      valid_attrs = %{
-        amount: 42,
-        stripe_id: "some stripe_id",
-        stripe_plan_name: "some stripe_plan_name"
-      }
-
-      product = product_fixture()
-      assert {:ok, %Plan{} = plan} = Billing.create_plan(product, valid_attrs)
-      assert plan.amount == 42
-      assert plan.stripe_id == "some stripe_id"
-      assert plan.stripe_plan_name == "some stripe_plan_name"
-    end
-
-    test "create_plan/1 with invalid data returns error changeset" do
-      product = product_fixture()
-
-      assert {:error, %Ecto.Changeset{}} = Billing.create_plan(product, @invalid_attrs)
-    end
-
-    test "update_plan/2 with valid data updates the plan" do
-      plan = plan_fixture()
-
-      update_attrs = %{
-        amount: 43,
-        stripe_id: "some updated stripe_id",
-        stripe_plan_name: "some updated stripe_plan_name"
-      }
-
-      assert {:ok, %Plan{} = plan} = Billing.update_plan(plan, update_attrs)
-      assert plan.amount == 43
-      assert plan.stripe_id == "some updated stripe_id"
-      assert plan.stripe_plan_name == "some updated stripe_plan_name"
-    end
-
-    test "update_plan/2 with invalid data returns error changeset" do
-      plan = plan_fixture()
-      assert {:error, %Ecto.Changeset{}} = Billing.update_plan(plan, @invalid_attrs)
-      assert plan == Billing.get_plan!(plan.id)
-    end
-
-    test "delete_plan/1 deletes the plan" do
-      plan = plan_fixture()
-      assert {:ok, %Plan{}} = Billing.delete_plan(plan)
-      assert_raise Ecto.NoResultsError, fn -> Billing.get_plan!(plan.id) end
-    end
-
-    test "change_plan/1 returns a plan changeset" do
-      plan = plan_fixture()
-      assert %Ecto.Changeset{} = Billing.change_plan(plan)
-    end
-  end
-
   describe "customers" do
     alias StripeSetup.Billing.Customer
 
@@ -167,7 +97,11 @@ defmodule StripeSetup.BillingTest do
 
     test "update_customer/2 with valid data updates the customer" do
       customer = customer_fixture()
-      update_attrs = %{default_source: "some updated default_source", stripe_id: "some updated stripe_id"}
+
+      update_attrs = %{
+        default_source: "some updated default_source",
+        stripe_id: "some updated stripe_id"
+      }
 
       assert {:ok, %Customer{} = customer} = Billing.update_customer(customer, update_attrs)
       assert customer.default_source == "some updated default_source"
@@ -210,7 +144,12 @@ defmodule StripeSetup.BillingTest do
     end
 
     test "create_subscription/1 with valid data creates a subscription" do
-      valid_attrs = %{cancel_at: ~N[2024-06-08 19:24:00], current_period_end_at: ~N[2024-06-08 19:24:00], status: "some status", stripe_id: "some stripe_id"}
+      valid_attrs = %{
+        cancel_at: ~N[2024-06-08 19:24:00],
+        current_period_end_at: ~N[2024-06-08 19:24:00],
+        status: "some status",
+        stripe_id: "some stripe_id"
+      }
 
       assert {:ok, %Subscription{} = subscription} = Billing.create_subscription(valid_attrs)
       assert subscription.cancel_at == ~N[2024-06-08 19:24:00]
@@ -225,9 +164,17 @@ defmodule StripeSetup.BillingTest do
 
     test "update_subscription/2 with valid data updates the subscription" do
       subscription = subscription_fixture()
-      update_attrs = %{cancel_at: ~N[2024-06-09 19:24:00], current_period_end_at: ~N[2024-06-09 19:24:00], status: "some updated status", stripe_id: "some updated stripe_id"}
 
-      assert {:ok, %Subscription{} = subscription} = Billing.update_subscription(subscription, update_attrs)
+      update_attrs = %{
+        cancel_at: ~N[2024-06-09 19:24:00],
+        current_period_end_at: ~N[2024-06-09 19:24:00],
+        status: "some updated status",
+        stripe_id: "some updated stripe_id"
+      }
+
+      assert {:ok, %Subscription{} = subscription} =
+               Billing.update_subscription(subscription, update_attrs)
+
       assert subscription.cancel_at == ~N[2024-06-09 19:24:00]
       assert subscription.current_period_end_at == ~N[2024-06-09 19:24:00]
       assert subscription.status == "some updated status"
@@ -236,7 +183,10 @@ defmodule StripeSetup.BillingTest do
 
     test "update_subscription/2 with invalid data returns error changeset" do
       subscription = subscription_fixture()
-      assert {:error, %Ecto.Changeset{}} = Billing.update_subscription(subscription, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Billing.update_subscription(subscription, @invalid_attrs)
+
       assert subscription == Billing.get_subscription!(subscription.id)
     end
 

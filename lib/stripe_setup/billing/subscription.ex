@@ -9,7 +9,7 @@ defmodule StripeSetup.Billing.Subscription do
     field :current_period_end_at, :naive_datetime
     field :status, :string
     field :stripe_id, :string
-    belongs_to :plan, StripeSetup.Billing.Plan
+    belongs_to :plan, StripeSetup.Billing.Plans.Plan
     belongs_to :customer, StripeSetup.Billing.Customer
 
     timestamps()
