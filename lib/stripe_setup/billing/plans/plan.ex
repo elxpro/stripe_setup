@@ -1,4 +1,4 @@
-defmodule StripeSetup.Billing.Plan do
+defmodule StripeSetup.Billing.Plans.Plan do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -8,8 +8,8 @@ defmodule StripeSetup.Billing.Plan do
     field :amount, Money.Ecto.Amount.Type
     field :stripe_id, :string
     field :stripe_plan_name, :string
-    belongs_to :product, StripeSetup.Billing.Product, foreign_key: :billing_product_id
-    has_many :subscriptions, StripeSetup.Billing.Subscription
+    belongs_to :product, StripeSetup.Billing.Products.Product, foreign_key: :billing_product_id
+    has_many :subscriptions, StripeSetup.Billing.Subscriptions.Subscription
     timestamps()
   end
 

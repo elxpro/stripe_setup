@@ -1,7 +1,7 @@
 defmodule StripeSetup.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
-  alias StripeSetup.Billing.Customer
+  alias StripeSetup.Billing.Customers.Customer
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id

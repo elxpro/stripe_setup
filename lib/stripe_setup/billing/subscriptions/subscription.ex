@@ -1,4 +1,4 @@
-defmodule StripeSetup.Billing.Subscription do
+defmodule StripeSetup.Billing.Subscriptions.Subscription do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -9,8 +9,8 @@ defmodule StripeSetup.Billing.Subscription do
     field :current_period_end_at, :naive_datetime
     field :status, :string
     field :stripe_id, :string
-    belongs_to :plan, StripeSetup.Billing.Plan
-    belongs_to :customer, StripeSetup.Billing.Customer
+    belongs_to :plan, StripeSetup.Billing.Plans.Plan
+    belongs_to :customer, StripeSetup.Billing.Customers.Customer
 
     timestamps()
   end

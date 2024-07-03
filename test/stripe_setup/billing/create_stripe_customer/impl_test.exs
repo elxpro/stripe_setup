@@ -2,7 +2,7 @@ defmodule StripeSetup.Billing.CreateStripeCustomer.ImplTest do
   use StripeSetup.DataCase
   import StripeSetup.AccountsFixtures
   alias StripeSetup.Billing.CreateStripeCustomer.Impl
-  alias StripeSetup.Billing.Customer
+  alias StripeSetup.Billing.Customers.Customer
 
   describe "subscribe_on_user_created/0" do
     test "subscribes on user created" do
