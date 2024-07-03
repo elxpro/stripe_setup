@@ -1,7 +1,7 @@
 defmodule StripeSetup.Billing.CreateStripeCustomer.Impl do
   import Ecto.Query, warn: false
   alias StripeSetup.Repo
-  alias StripeSetup.Billing.Customer
+  alias StripeSetup.Billing.Customers.Customer
   alias StripeSetup.Accounts
 
   @stripe_service Application.compile_env(:stripe_setup, :stripe_service)

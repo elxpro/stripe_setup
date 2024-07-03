@@ -22,7 +22,7 @@ defmodule StripeSetup.Billing.SynchronizePlansTest do
     test "run/0 syncs plans from stripe and creates them in billing_plans" do
       assert Billing.list_plans() == []
       SynchronizePlans.run()
-      assert [%StripeSetup.Billing.Plan{}] = Billing.list_plans()
+      assert [%StripeSetup.Billing.Plans.Plan{}] = Billing.list_plans()
     end
 
     test "run/0 deletes plans that exists in local database but does not exists in stripe", %{

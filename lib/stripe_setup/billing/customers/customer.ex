@@ -1,4 +1,4 @@
-defmodule StripeSetup.Billing.Customer do
+defmodule StripeSetup.Billing.Customers.Customer do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -8,7 +8,7 @@ defmodule StripeSetup.Billing.Customer do
     field :default_source, :string
     field :stripe_id, :string
     belongs_to :user, StripeSetup.Accounts.User
-    has_many :subscriptions, StripeSetup.Billing.Subscription
+    has_many :subscriptions, StripeSetup.Billing.Subscriptions.Subscription
     timestamps()
   end
 
