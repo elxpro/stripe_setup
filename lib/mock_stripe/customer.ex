@@ -23,7 +23,7 @@ defmodule MockStripe.Customer do
 
   def retrieve, do: retrieve("cus_#{MockStripe.token()}")
 
-  def retrieve("prod_" <> _ = stripe_id) do
+  def retrieve("cus_" <> _ = stripe_id) do
     %__MODULE__{
       id: stripe_id,
       object: "customer",

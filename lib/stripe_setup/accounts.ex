@@ -83,8 +83,9 @@ defmodule StripeSetup.Accounts do
 
   def notify_subscribers({:error, _} = result), do: result
 
-  def notify_subscribers({:ok, user}) do
+  def notify_subscribers({:ok, user} = result) do
     Phoenix.PubSub.broadcast(StripeSetup.PubSub, "user_created", %{user: user})
+    result
   end
 
   def subscribe_on_user_created() do

@@ -4,7 +4,7 @@ defmodule StripeSetup.Billing.CreateStripeCustomer.Server do
 
   def start_link(_), do: GenServer.start_link(__MODULE__, nil)
 
-  def state(state) do
+  def init(state) do
     Impl.subscripe_on_user_created()
     {:ok, state}
   end

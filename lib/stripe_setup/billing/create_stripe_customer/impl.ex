@@ -11,7 +11,7 @@ defmodule StripeSetup.Billing.CreateStripeCustomer.Impl do
     {:ok, %{id: stripe_id, default_source: default_source}} =
       @stripe_service.Customer.create(%{email: user.email})
 
-    billing_customer =
+    {:ok, billing_customer} =
       user
       |> Ecto.build_assoc(:billing_customer)
       |> Customers.change_customer(%{stripe_id: stripe_id, default_source: default_source})
