@@ -4,12 +4,15 @@ defmodule StripeSetup.Application do
   @moduledoc false
 
   use Application
+  alias StripeSetup.Billing.CreateStripeCustomer
 
   @impl true
   def start(_type, _args) do
+    create_stripe_customer_service = get_customer_service(Mix.env())
     children = [
       # Start the Telemetry supervisor
       StripeSetupWeb.Telemetry,
+      create_stripe_customer_service,
       # Start the Ecto repository
       StripeSetup.Repo,
       # Start the PubSub system
@@ -35,4 +38,7 @@ defmodule StripeSetup.Application do
     StripeSetupWeb.Endpoint.config_change(changed, removed)
     :ok
   end
+
+  def get_customer_service(:test), do: CreateStripeCustomer.Mock
+  def get_customer_service(_), do: CreateStripeCustomer.Server
 end

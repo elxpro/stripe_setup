@@ -1,6 +1,8 @@
 defmodule StripeSetup.Billing.Subscription do
   use Ecto.Schema
   import Ecto.Changeset
+  alias StripeSetup.Billing.Plans.Plan
+  alias StripeSetup.Billing.Customers.Customer
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -9,8 +11,8 @@ defmodule StripeSetup.Billing.Subscription do
     field :current_period_end_at, :naive_datetime
     field :status, :string
     field :stripe_id, :string
-    belongs_to :plan, StripeSetup.Billing.Plans.Plan
-    belongs_to :customer, StripeSetup.Billing.Customer
+    belongs_to :plan, Plan
+    belongs_to :customer, Customer
 
     timestamps()
   end
