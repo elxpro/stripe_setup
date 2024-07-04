@@ -6,7 +6,6 @@ defmodule StripeSetup.Billing do
   import Ecto.Query, warn: false
   alias StripeSetup.Repo
 
-
   alias StripeSetup.Billing.Subscription
 
   @doc """

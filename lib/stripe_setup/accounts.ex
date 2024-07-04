@@ -78,6 +78,17 @@ defmodule StripeSetup.Accounts do
     %User{}
     |> User.registration_changeset(attrs)
     |> Repo.insert()
+    |> notify_subscribers()
+  end
+
+  def notify_subscribers({:error, _} = result), do: result
+
+  def notify_subscribers({:ok, user}) do
+    Phoenix.PubSub.broadcast(StripeSetup.PubSub, "user_created", %{user: user})
+  end
+
+  def subscribe_on_user_created() do
+    Phoenix.PubSub.subscribe(StripeSetup.PubSub, "user_created")
   end
 
   @doc """

@@ -1,6 +1,4 @@
 defmodule StripeSetup.Billing.Customers do
-
-
   import Ecto.Query, warn: false
   alias StripeSetup.Repo
 
