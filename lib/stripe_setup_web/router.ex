@@ -24,9 +24,13 @@ defmodule StripeSetupWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", StripeSetupWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", StripeSetupWeb do
+    pipe_through :api
+
+    scope "/stripe", Stripe do
+      post "/webhooks", WebhookController, :create
+    end
+  end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:stripe_setup, :dev_routes) do

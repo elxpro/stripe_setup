@@ -61,7 +61,8 @@ config :logger, :console,
 config :phoenix, :json_library, Jason
 
 config :stripity_stripe,
-  api_key: System.get_env("STRIPE_SECRET_KEY") || "123"
+  api_key: System.get_env("STRIPE_SECRET_KEY") || "123",
+  webhook_signing_key: System.get_env("STRIPE_WEBHOOK_SIGNING_KEY") || "123"
 
 config :stripe_setup, stripe_service: Stripe
 
