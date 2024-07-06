@@ -4,7 +4,6 @@ defmodule StripeSetup.Billing.WebhookProcessor.EventTest do
 
   describe "testing events" do
     test "test if webhook received the event" do
-
       assert {:messages, []} == Process.info(self(), :messages)
 
       assert Event.subscribe_on_webhook_received() == :ok

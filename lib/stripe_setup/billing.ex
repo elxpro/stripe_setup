@@ -6,6 +6,10 @@ defmodule StripeSetup.Billing do
   import Ecto.Query, warn: false
   alias StripeSetup.Repo
 
+  alias StripeSetup.Billing.Products
+
+  defdelegate list_products_by_plan(plan), to: Products
+
   alias StripeSetup.Billing.Subscription
 
   @doc """

@@ -29,7 +29,7 @@ defmodule StripeSetup.Billing.PlansTest do
 
       product = product_fixture()
       assert {:ok, %Plan{} = plan} = Plans.create_plan(product, valid_attrs)
-      assert plan.amount == 42
+      assert plan.amount == %Money{amount: 42, currency: :USD}
       assert plan.stripe_id == "some stripe_id"
       assert plan.stripe_plan_name == "some stripe_plan_name"
     end
@@ -50,7 +50,7 @@ defmodule StripeSetup.Billing.PlansTest do
       }
 
       assert {:ok, %Plan{} = plan} = Plans.update_plan(plan, update_attrs)
-      assert plan.amount == 43
+      assert plan.amount == %Money{amount: 43, currency: :USD}
       assert plan.stripe_id == "some updated stripe_id"
       assert plan.stripe_plan_name == "some updated stripe_plan_name"
     end

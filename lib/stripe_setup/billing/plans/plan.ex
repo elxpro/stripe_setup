@@ -5,7 +5,7 @@ defmodule StripeSetup.Billing.Plans.Plan do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "billing_plans" do
-    field :amount, :integer
+    field :amount, Money.Ecto.Amount.Type
     field :stripe_id, :string
     field :stripe_plan_name, :string
     belongs_to :product, StripeSetup.Billing.Products.Product, foreign_key: :billing_product_id
