@@ -1,4 +1,4 @@
-defmodule StripeSetup.Billing.Subscription do
+defmodule StripeSetup.Billing.Subscriptions.Subscription do
   use Ecto.Schema
   import Ecto.Changeset
   alias StripeSetup.Billing.Plans.Plan

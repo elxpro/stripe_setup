@@ -1,4 +1,4 @@
-defmodule StripeSetup.BillingFixtures do
+defmodule StripeSetup.SubscriptionFixtures do
   @moduledoc """
   This module defines test helpers for creating
   entities via the `StripeSetup.Billing` context.
@@ -16,7 +16,7 @@ defmodule StripeSetup.BillingFixtures do
         status: "some status",
         stripe_id: "some stripe_id"
       })
-      |> StripeSetup.Billing.create_subscription()
+      |> StripeSetup.Billing.Subscriptions.create_subscription()
 
     subscription
   end
