@@ -21,6 +21,7 @@ defmodule StripeSetupWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    live "/pricings", PricingLive.Index, :index
   end
 
   # Other scopes may use custom stacks.

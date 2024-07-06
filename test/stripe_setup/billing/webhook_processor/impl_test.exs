@@ -2,7 +2,6 @@ defmodule StripeSetup.Billing.WebhookProcessor.ImplTest do
   use StripeSetup.DataCase
   alias StripeSetup.Billing.WebhookProcessor.Impl
 
-
   describe "sync_event/1" do
     test "testing if all subscriptions are working" do
       assert Impl.sync_event(%{type: "pumpkin"}) == nil

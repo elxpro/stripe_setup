@@ -1,0 +1,40 @@
+<h1 class="text-4xl font-bold leading-tight text-gray-900 text-center">Plans & Pricing</h1>
+
+<div class="flex mt-4 gap-2 justify-between text-center p-2 border-blue-200 rounded-full">
+  <.link
+    patch={~p"/pricings?interval=month"}
+    class={[
+      (@interval == "month" && "w-full rounded-full bg-blue-800 text-white") ||
+        "w-full rounded-full hover:bg-blue-800 bg-blue-100 hover:text-white transition-all"
+    ]}
+  >
+    Bill Monthly
+  </.link>
+  <.link
+    patch={~p"/pricings?interval=year"}
+    class={[
+      (@interval == "year" && "w-full rounded-full bg-blue-800 text-white") ||
+        "w-full rounded-full hover:bg-blue-800 bg-blue-100 hover:text-white transition-all"
+    ]}
+  >
+    Bill Yearly
+  </.link>
+</div>
+
+<section>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div
+      :for={product <- @products}
+      id={product.id}
+      class="hover:bg-blue-200 bg-blue-100 transition-all p-2 rounded-lg"
+    >
+      <p class="mb-1 text-xs font-semibold tracking-wide text-gray-400 uppercase">
+        <%= product.stripe_product_name %>
+      </p>
+      <div><%= product.plan.amount %>
+        <span>per <%= product.plan.stripe_plan_name %></span></div>
+      <p>description</p>
+      <a href="#">Get Started</a>
+    </div>
+  </div>
+</section>

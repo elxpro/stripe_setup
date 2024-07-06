@@ -9,7 +9,7 @@ defmodule MockStripe.Product do
     :updated
   ]
 
-   @product_id "prod_#{MockStripe.token()}"
+  @product_id "prod_#{MockStripe.token()}"
 
   def retrieve, do: retrieve(@product_id)
 
