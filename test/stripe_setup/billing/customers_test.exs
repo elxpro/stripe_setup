@@ -60,5 +60,16 @@ defmodule StripeSetup.Billing.CustomersTest do
       customer = customer_fixture()
       assert %Ecto.Changeset{} = Customers.change_customer(customer)
     end
+
+    test "get_customer_by_stripe_id!/1 returns the customer with given id" do
+      customer = customer_fixture()
+      assert Customers.get_customer_by_stripe_id!(customer.stripe_id) == customer
+    end
+
+    test "get_billing_customer_for_user/1 returns the customer with given id" do
+      customer = customer_fixture()
+      user = %StripeSetup.Accounts.User{id: customer.user_id}
+      assert Customers.get_billing_customer_for_user(user) == customer
+    end
   end
 end

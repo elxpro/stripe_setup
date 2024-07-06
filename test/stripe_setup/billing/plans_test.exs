@@ -71,5 +71,22 @@ defmodule StripeSetup.Billing.PlansTest do
       plan = plan_fixture()
       assert %Ecto.Changeset{} = Plans.change_plan(plan)
     end
+
+    test "get_plan_by_stripe_id!/1 returns the plan with given stripe_id" do
+      plan = plan_fixture()
+      assert Plans.get_plan_by_stripe_id!(plan.stripe_id) == plan
+    end
+
+    test "list_plans_for_subscription_page/0 returns all plans" do
+      plan_fixture()
+
+      assert [
+               %{
+                 amount: %Money{amount: 42, currency: :USD},
+                 name: "some stripe_product_name",
+                 period: "some stripe_plan_name"
+               }
+             ] = Plans.list_plans_for_subscription_page()
+    end
   end
 end

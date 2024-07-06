@@ -27,7 +27,9 @@ defmodule StripeSetup.Billing.SubscriptionsTest do
         stripe_id: "some stripe_id"
       }
 
-      assert {:ok, %Subscription{} = subscription} = Subscriptions.create_subscription(valid_attrs)
+      assert {:ok, %Subscription{} = subscription} =
+               Subscriptions.create_subscription(valid_attrs)
+
       assert subscription.cancel_at == ~N[2024-06-08 19:24:00]
       assert subscription.current_period_end_at == ~N[2024-06-08 19:24:00]
       assert subscription.status == "some status"
@@ -75,6 +77,11 @@ defmodule StripeSetup.Billing.SubscriptionsTest do
     test "change_subscription/1 returns a subscription changeset" do
       subscription = subscription_fixture()
       assert %Ecto.Changeset{} = Subscriptions.change_subscription(subscription)
+    end
+
+    test "get_subscription_by_stripe_id!/1 returns the subscription with given stripe_id" do
+      subscription = subscription_fixture()
+      assert Subscriptions.get_subscription_by_stripe_id!(subscription.stripe_id) == subscription
     end
   end
 end
