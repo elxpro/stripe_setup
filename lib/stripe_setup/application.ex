@@ -5,10 +5,12 @@ defmodule StripeSetup.Application do
 
   use Application
   alias StripeSetup.Billing.CreateStripeCustomer
+  alias StripeSetup.Billing.WebhookProcessor
 
   @impl true
   def start(_type, _args) do
     create_stripe_customer_service = get_customer_service(Mix.env())
+    stripe_processor = get_stripe_processor(Mix.env())
 
     children = [
       # Start the Telemetry supervisor
@@ -21,7 +23,8 @@ defmodule StripeSetup.Application do
       {Finch, name: StripeSetup.Finch},
       # Start the Endpoint (http/https)
       StripeSetupWeb.Endpoint,
-      create_stripe_customer_service
+      create_stripe_customer_service,
+      stripe_processor
       # Start a worker by calling: StripeSetup.Worker.start_link(arg)
       # {StripeSetup.Worker, arg}
     ]
@@ -42,4 +45,7 @@ defmodule StripeSetup.Application do
 
   def get_customer_service(:test), do: CreateStripeCustomer.Mock
   def get_customer_service(_), do: CreateStripeCustomer.Server
+
+  def get_stripe_processor(:test), do: WebhookProcessor.Mock
+  def get_stripe_processor(_), do: WebhookProcessor.Server
 end
