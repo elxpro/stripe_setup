@@ -9,10 +9,10 @@ defmodule StripeSetup.Application do
   @impl true
   def start(_type, _args) do
     create_stripe_customer_service = get_customer_service(Mix.env())
+
     children = [
       # Start the Telemetry supervisor
       StripeSetupWeb.Telemetry,
-      create_stripe_customer_service,
       # Start the Ecto repository
       StripeSetup.Repo,
       # Start the PubSub system
@@ -20,7 +20,8 @@ defmodule StripeSetup.Application do
       # Start Finch
       {Finch, name: StripeSetup.Finch},
       # Start the Endpoint (http/https)
-      StripeSetupWeb.Endpoint
+      StripeSetupWeb.Endpoint,
+      create_stripe_customer_service
       # Start a worker by calling: StripeSetup.Worker.start_link(arg)
       # {StripeSetup.Worker, arg}
     ]
