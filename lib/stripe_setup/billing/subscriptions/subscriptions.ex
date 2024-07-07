@@ -114,4 +114,37 @@ defmodule StripeSetup.Billing.Subscriptions do
   """
   def get_subscription_by_stripe_id!(stripe_id),
     do: Repo.get_by!(Subscription, stripe_id: stripe_id)
+
+  alias StripeCourse.Billing.Plans
+  alias StripeCourse.Billing.Customers
+
+  def create_full_subscription(
+        %{customer: customer_stripe_id, plan_id: plan_stripe_id} = stripe_subscription
+      ) do
+    create_subscription(%{
+      customer_id: customer_stripe_id,
+      plan_id: plan_stripe_id,
+      stripe_id: stripe_subscription.id,
+      status: stripe_subscription.status,
+      current_period_end_at: unix_to_naive_datetime(stripe_subscription.current_period_end)
+    })
+  end
+
+  def update_full_subscription(%{id: stripe_id} = stripe_subscription) do
+    subscription = get_subscription_by_stripe_id!(stripe_id)
+    cancel_at = stripe_subscription.cancel_at || stripe_subscription.canceled_at
+
+    update_subscription(subscription, %{
+      status: stripe_subscription.status,
+      cancel_at: unix_to_naive_datetime(cancel_at)
+    })
+  end
+
+  defp unix_to_naive_datetime(nil), do: nil
+
+  defp unix_to_naive_datetime(datetime_in_seconds) do
+    datetime_in_seconds
+    |> DateTime.from_unix!()
+    |> DateTime.to_naive()
+  end
 end

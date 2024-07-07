@@ -11,7 +11,7 @@ defmodule StripeSetup.PlanFixtures do
       attrs
       |> Enum.into(%{
         amount: 42,
-        stripe_id: "some stripe_id",
+        stripe_id: Ecto.UUID.generate(),
         stripe_plan_name: "some stripe_plan_name"
       })
 

@@ -1,9 +1,9 @@
 defmodule StripeSetup.Billing.SubscriptionsTest do
   use StripeSetup.DataCase
-
-  describe "subscriptions" do
     alias StripeSetup.Billing.Subscriptions
     alias StripeSetup.Billing.Subscriptions.Subscription
+  describe "subscriptions" do
+
 
     import StripeSetup.SubscriptionFixtures
 
@@ -83,5 +83,74 @@ defmodule StripeSetup.Billing.SubscriptionsTest do
       subscription = subscription_fixture()
       assert Subscriptions.get_subscription_by_stripe_id!(subscription.stripe_id) == subscription
     end
+  end
+
+  import StripeSetup.CustomerFixtures
+  import StripeSetup.PlanFixtures
+  import StripeSetup.SubscriptionFixtures
+
+  describe "create_full_subscription" do
+
+    test "create_full_subscription/1 creates a subscription" do
+      customer = customer_fixture()
+      plan = plan_fixture()
+      %{id: stripe_id} =
+        stripe_subscription =
+        subscription_data(%{customer_id: customer.id, plan_id: plan.id})
+
+      Subscriptions.create_full_subscription(stripe_subscription)
+
+      assert [%Subscription{stripe_id: ^stripe_id} = subscription] =
+               Subscriptions.list_subscriptions()
+
+      assert subscription.status == "active"
+      assert subscription.current_period_end_at == ~N[2020-11-30 11:35:29]
+      assert subscription.customer_id == customer.id
+      assert subscription.plan_id == plan.id
+    end
+  end
+
+  describe "update_full_subscription" do
+
+    test "update_full_subscription/1 cancels a subscription" do
+      subscription = subscription_fixture(%{status: "active", cancel_at: nil})
+
+      stripe_subscription =
+        subscription_data(%{
+          id: subscription.stripe_id,
+          status: "canceled",
+          canceled_at: 1_604_064_386
+        })
+
+      assert [%Subscription{cancel_at: nil}] = Subscriptions.list_subscriptions()
+      Subscriptions.update_full_subscription(stripe_subscription)
+
+      assert [%Subscription{status: "canceled", cancel_at: ~N[2020-10-30 13:26:26]}] =
+               Subscriptions.list_subscriptions()
+    end
+  end
+
+
+  defp subscription_data(attrs) do
+    IO.inspect attrs
+    %Stripe.Subscription{
+      created: 1_604_057_729,
+      current_period_start: 1_604_057_729,
+      start_date: 1_604_057_729,
+      billing_cycle_anchor: 1_604_057_729,
+      current_period_end: 1_606_736_129,
+      object: "subscription",
+      id: Ecto.UUID.generate(),
+      latest_invoice: MockStripe.token(),
+      customer: attrs.customer_id,
+      quantity: 1,
+      status: "active",
+      collection_method: "charge_automatically",
+      cancel_at_period_end: false,
+      plan: %Stripe.Plan{
+        id: attrs.plan_id,
+      }
+    }
+    |> Map.merge(attrs)
   end
 end
