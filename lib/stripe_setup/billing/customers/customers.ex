@@ -118,7 +118,7 @@ defmodule StripeSetup.Billing.Customers do
   iex> get_billing_customer_for_user(%User{id: 456})
   nil
   """
-  def get_billing_customer_for_user(user) do
-    Repo.get_by(Customer, user_id: user.id)
+  def get_billing_customer_for_user(user_id) do
+    Repo.get_by(Customer, user_id: user_id)
   end
 end
