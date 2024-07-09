@@ -11,6 +11,8 @@ defmodule StripeSetup.Billing.WebhookProcessor.Server do
 
   def handle_info(%{event: event}, state) do
     Impl.sync_event(event)
+    IO.inspect(event)
+    IO.inspect("here!!")
     {:noreply, state}
   end
 end

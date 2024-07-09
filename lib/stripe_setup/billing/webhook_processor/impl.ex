@@ -5,7 +5,9 @@ defmodule StripeSetup.Billing.WebhookProcessor.Impl do
 
   def sync_event(event) do
     Event.notify_subscribers(event)
+
     sync(event.type)
+    |> dbg()
   end
 
   def subscribe_on_webhook_received, do: Event.subscribe_on_webhook_received()

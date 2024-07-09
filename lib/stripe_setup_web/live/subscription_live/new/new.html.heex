@@ -1,8 +1,4 @@
 <div id="checkout-new" class="container max-w-md mx-auto">
-  <form phx-change="update-plan">
-    <.input type="select" id="plan_id" name="plan_id" options={@products} value="" />
-  </form>
-
   <form
     action="#"
     method="post"
@@ -10,6 +6,8 @@
     id="payment-form"
     data-public-key={@public_key}
   >
+    <.input type="select" id="plan_id" name="plan_id" options={@products} value="" />
+
     <label for="card-name" class="block my-2 font-semibold">
       Your Name (same as your credit card)
     </label>
@@ -33,7 +31,7 @@
         <%= @error_message %>
       </div>
     </div>
-    <button id="submit" class="w-full btn btn-primary">
+    <button id="submit" phx-disabled-with="paying" class="w-full btn btn-primary">
       <%= if @loading do %>
         <div class="w-4 h-4 spinner"></div>
       <% end %>

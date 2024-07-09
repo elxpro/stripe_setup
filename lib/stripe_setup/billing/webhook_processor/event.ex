@@ -5,8 +5,13 @@ defmodule StripeSetup.Billing.WebhookProcessor.Event do
   @webhook_processed "webhook_processed"
   @webhook_received "webhook_received"
 
-  def notify_subscribers(event), do: broadcast(@pubsub, @webhook_processed, {:event, event})
-  def subscribe, do: subscribe(@pubsub, @webhook_processed)
+  def notify_subscribers(event) do
+    stripe_id = event.data.object.id
+    broadcast(@pubsub, @webhook_processed <> ":#{stripe_id}", {:event, event})
+  end
+
+  def subscribe(stripe_id),
+    do: subscribe(@pubsub, @webhook_processed <> ":#{stripe_id}")
 
   def subscribe_on_webhook_received, do: subscribe(@pubsub, @webhook_received)
 end
