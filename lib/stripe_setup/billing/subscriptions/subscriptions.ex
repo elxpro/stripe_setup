@@ -147,4 +147,25 @@ defmodule StripeSetup.Billing.Subscriptions do
     |> DateTime.from_unix!()
     |> DateTime.to_naive()
   end
+
+  @doc """
+  Gets a single active subscription for a user_id.
+  Returns `nil` if an active Subscription does not exist.
+  ## Examples
+  iex> get_active_subscription_for_user(123)
+  %Subscription{}
+  iex> get_active_subscription_for_user(456)
+  nil
+  """
+  def get_active_subscription_for_user(user_id) do
+    from(s in Subscription,
+      join: c in assoc(s, :customer),
+      where: c.user_id == ^user_id,
+      where: is_nil(s.cancel_at) or s.cancel_at > ^NaiveDateTime.utc_now(),
+      where: s.current_period_end_at > ^NaiveDateTime.utc_now(),
+      where: s.status == "active",
+      limit: 1
+    )
+    |> Repo.one()
+  end
 end

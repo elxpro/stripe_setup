@@ -1,10 +1,9 @@
 defmodule StripeSetup.Billing.SubscriptionsTest do
   use StripeSetup.DataCase
-    alias StripeSetup.Billing.Subscriptions
-    alias StripeSetup.Billing.Subscriptions.Subscription
+  alias StripeSetup.Billing.Subscriptions
+  alias StripeSetup.Billing.Subscriptions.Subscription
+
   describe "subscriptions" do
-
-
     import StripeSetup.SubscriptionFixtures
 
     @invalid_attrs %{cancel_at: nil, current_period_end_at: nil, status: nil, stripe_id: nil}
@@ -90,13 +89,12 @@ defmodule StripeSetup.Billing.SubscriptionsTest do
   import StripeSetup.SubscriptionFixtures
 
   describe "create_full_subscription" do
-
     test "create_full_subscription/1 creates a subscription" do
       customer = customer_fixture()
       plan = plan_fixture()
+
       %{id: stripe_id} =
-        stripe_subscription =
-        subscription_data(%{customer_id: customer.id, plan_id: plan.id})
+        stripe_subscription = subscription_data(%{customer_id: customer.id, plan_id: plan.id})
 
       Subscriptions.create_full_subscription(stripe_subscription)
 
@@ -111,7 +109,6 @@ defmodule StripeSetup.Billing.SubscriptionsTest do
   end
 
   describe "update_full_subscription" do
-
     test "update_full_subscription/1 cancels a subscription" do
       subscription = subscription_fixture(%{status: "active", cancel_at: nil})
 
@@ -130,9 +127,7 @@ defmodule StripeSetup.Billing.SubscriptionsTest do
     end
   end
 
-
   defp subscription_data(attrs) do
-    IO.inspect attrs
     %Stripe.Subscription{
       created: 1_604_057_729,
       current_period_start: 1_604_057_729,
@@ -148,7 +143,7 @@ defmodule StripeSetup.Billing.SubscriptionsTest do
       collection_method: "charge_automatically",
       cancel_at_period_end: false,
       plan: %Stripe.Plan{
-        id: attrs.plan_id,
+        id: attrs.plan_id
       }
     }
     |> Map.merge(attrs)
