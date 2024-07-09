@@ -8,11 +8,13 @@ defmodule StripeSetup.SubscriptionFixtures do
   Generate a subscription.
   """
   def subscription_fixture(attrs \\ %{}) do
+    date = NaiveDateTime.utc_now() |> NaiveDateTime.add(10, :day)
+
     {:ok, subscription} =
       attrs
       |> Enum.into(%{
-        cancel_at: ~N[2024-06-08 19:24:00],
-        current_period_end_at: ~N[2024-06-08 19:24:00],
+        cancel_at: date,
+        current_period_end_at: date,
         status: "some status",
         stripe_id: "some stripe_id"
       })

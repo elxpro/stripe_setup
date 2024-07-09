@@ -67,10 +67,18 @@ defmodule StripeSetupWeb.Router do
   end
 
   scope "/", StripeSetupWeb do
+    pipe_through [:browser, :require_authenticated_user, :require_active_subscription]
+
+    live "/dashboard", DashboardLive, :index
+  end
+
+  scope "/", StripeSetupWeb do
     pipe_through [:browser, :require_authenticated_user]
 
     live_session :require_authenticated_user,
       on_mount: [{StripeSetupWeb.UserAuth, :ensure_authenticated}] do
+      live "/subscriptions/new", SubscriptionLive.New, :new
+
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
     end

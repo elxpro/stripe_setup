@@ -115,9 +115,6 @@ defmodule StripeSetup.Billing.Subscriptions do
   def get_subscription_by_stripe_id!(stripe_id),
     do: Repo.get_by!(Subscription, stripe_id: stripe_id)
 
-  alias StripeCourse.Billing.Plans
-  alias StripeCourse.Billing.Customers
-
   def create_full_subscription(
         %{customer: customer_stripe_id, plan_id: plan_stripe_id} = stripe_subscription
       ) do

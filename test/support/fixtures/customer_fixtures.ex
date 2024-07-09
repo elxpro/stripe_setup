@@ -16,7 +16,7 @@ defmodule StripeSetup.CustomerFixtures do
       |> Enum.into(%{
         default_source: "some default_source",
         stripe_id: Ecto.UUID.generate(),
-        user_id: user_id
+        user_id: Map.get(attrs, :user_id, user_id)
       })
       |> StripeSetup.Billing.Customers.create_customer()
 

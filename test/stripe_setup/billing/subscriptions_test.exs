@@ -5,6 +5,8 @@ defmodule StripeSetup.Billing.SubscriptionsTest do
 
   describe "subscriptions" do
     import StripeSetup.SubscriptionFixtures
+    import StripeSetup.CustomerFixtures
+    import StripeSetup.PlanFixtures
 
     @invalid_attrs %{cancel_at: nil, current_period_end_at: nil, status: nil, stripe_id: nil}
 
@@ -110,11 +112,22 @@ defmodule StripeSetup.Billing.SubscriptionsTest do
 
   describe "update_full_subscription" do
     test "update_full_subscription/1 cancels a subscription" do
-      subscription = subscription_fixture(%{status: "active", cancel_at: nil})
+      customer = customer_fixture()
+      plan = plan_fixture()
+
+      subscription =
+        subscription_fixture(%{
+          status: "active",
+          cancel_at: nil,
+          customer_id: customer.id,
+          plan_id: plan.id
+        })
 
       stripe_subscription =
         subscription_data(%{
           id: subscription.stripe_id,
+          customer_id: customer.id,
+          plan_id: plan.id,
           status: "canceled",
           canceled_at: 1_604_064_386
         })

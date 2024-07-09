@@ -5,6 +5,8 @@ defmodule StripeSetupWeb.UserAuthTest do
   alias StripeSetup.Accounts
   alias StripeSetupWeb.UserAuth
   import StripeSetup.AccountsFixtures
+  import StripeSetup.CustomerFixtures
+  import StripeSetup.SubscriptionFixtures
 
   @remember_me_cookie "_stripe_setup_web_user_remember_me"
 
@@ -15,6 +17,45 @@ defmodule StripeSetupWeb.UserAuthTest do
       |> init_test_session(%{})
 
     %{user: user_fixture(), conn: conn}
+  end
+
+  describe "require_active_subscription/2" do
+    test "does nothing when user is not logged in", %{conn: conn, user: user} do
+      customer = customer_fixture(%{user_id: user.id})
+      subscription_fixture(%{customer_id: customer.id, status: "active"})
+      conn = conn |> fetch_flash() |> UserAuth.require_active_subscription([])
+      refute conn.halted
+    end
+
+    test "does nothing when user logged in with active subscription", %{conn: conn, user: user} do
+      customer = customer_fixture(%{user_id: user.id})
+      subscription_fixture(%{customer_id: customer.id, status: "active"})
+
+      conn =
+        conn
+        |> fetch_flash()
+        |> assign(:current_user, user)
+        |> UserAuth.require_active_subscription([])
+
+      refute conn.halted
+    end
+
+    test "halts and redirects when user logged in with inactive subscription", %{
+      conn: conn,
+      user: user
+    } do
+      customer = customer_fixture(%{user_id: user.id})
+      subscription_fixture(%{customer_id: customer.id, status: "inactive"})
+
+      conn =
+        conn
+        |> fetch_flash()
+        |> assign(:current_user, user)
+        |> UserAuth.require_active_subscription([])
+
+      assert conn.halted
+      assert redirected_to(conn) == "/subscriptions/new"
+    end
   end
 
   describe "log_in_user/3" do
