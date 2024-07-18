@@ -13,7 +13,9 @@ defmodule StripeSetup.Billing.WebhookProcessor.ServerTest do
     test "testing the server  after broadcasting" do
       start_supervised(Server, [])
 
-      Event.subscribe()
+      payload = %{type: "pumpkin", data: %{object: %{id: "123"}}}
+
+      Event.subscribe("123")
 
       event = event_fixture()
       Event.notify_subscribers(event)

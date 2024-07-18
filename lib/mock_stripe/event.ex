@@ -1,7 +1,7 @@
 defmodule MockStripe.Event do
   defstruct [
     :id,
-    :object,
+    :data,
     :request,
     :type
   ]
@@ -9,7 +9,7 @@ defmodule MockStripe.Event do
   def generate(attrs \\ %{}) do
     %__MODULE__{
       id: "evt_#{MockStripe.token()}",
-      object: "event",
+      data: %{object: %{id: "123"}},
       request: %{
         id: "req_#{MockStripe.token()}",
         idempotency_key: MockStripe.token()

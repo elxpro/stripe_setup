@@ -68,8 +68,7 @@ defmodule StripeSetup.Billing.CustomersTest do
 
     test "get_billing_customer_for_user/1 returns the customer with given id" do
       customer = customer_fixture()
-      user = %StripeSetup.Accounts.User{id: customer.user_id}
-      assert Customers.get_billing_customer_for_user(user) == customer
+      assert Customers.get_billing_customer_for_user(customer.user_id) == customer
     end
   end
 end
