@@ -35,6 +35,8 @@ defmodule StripeSetupWeb.SubscriptionLive.New do
   end
 
   def handle_info({:event, event}, socket) do
+    IO.inspect("listen!!")
+
     case event.type do
       # "payment_method.attached" ->
       #   if socket.assigns.retry do
