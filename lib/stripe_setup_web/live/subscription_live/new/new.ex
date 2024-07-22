@@ -7,7 +7,6 @@ defmodule StripeSetupWeb.SubscriptionLive.New do
     customer = Billing.get_billing_customer_for_user(socket.assigns.current_user.id)
     Billing.subscribe_process_webhook(customer.stripe_id)
     products = Billing.list_plans_for_subscription_page()
-    IO.inspect(customer)
 
     socket =
       socket

@@ -7,7 +7,6 @@ defmodule StripeSetup.Billing.WebhookProcessor.Event do
 
   def notify_subscribers(event) do
     stripe_id = event.data.object.id
-    IO.inspect event
     broadcast(@pubsub, @webhook_processed <> ":#{stripe_id}", {:event, event})
   end
 
