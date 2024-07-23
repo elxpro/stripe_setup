@@ -2,107 +2,37 @@ defmodule StripeSetup.Billing do
   @moduledoc """
   The Billing context.
   """
-
-  import Ecto.Query, warn: false
-  alias StripeSetup.Repo
-
+  @stripe_service Application.compile_env(:stripe_setup, :stripe_service)
+  alias StripeSetup.Billing.Customers
   alias StripeSetup.Billing.Products
+  alias StripeSetup.Billing.Plans
+  alias StripeSetup.Billing.WebhookProcessor.Event
 
   defdelegate list_products_by_plan(plan), to: Products
 
-  alias StripeSetup.Billing.Subscription
+  defdelegate subscribe_process_webhook(stripe_id), to: Event, as: :subscribe
 
-  @doc """
-  Returns the list of subscriptions.
+  defdelegate get_billing_customer_for_user(user_id), to: Customers
 
-  ## Examples
-
-      iex> list_subscriptions()
-      [%Subscription{}, ...]
-
-  """
-  def list_subscriptions do
-    Repo.all(Subscription)
+  def list_plans_for_subscription_page() do
+    Plans.list_plans_for_subscription_page()
+    |> Enum.group_by(&Map.get(&1, :period))
+    |> Enum.reduce([], fn {period, plans}, acc ->
+      plans = Enum.map(plans, fn plan -> {"#{plan.name} - #{plan.amount}", plan.id} end)
+      period = String.capitalize("#{period}ly subscription")
+      Enum.concat(acc, [{period, plans}])
+    end)
   end
 
-  @doc """
-  Gets a single subscription.
+  def create_and_attach_payment_method(customer_stripe_id, payment_method_id) do
+    {:ok, payment_method} =
+      @stripe_service.PaymentMethod.attach(%{
+        customer: customer_stripe_id,
+        payment_method: payment_method_id
+      })
 
-  Raises `Ecto.NoResultsError` if the Subscription does not exist.
-
-  ## Examples
-
-      iex> get_subscription!(123)
-      %Subscription{}
-
-      iex> get_subscription!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_subscription!(id), do: Repo.get!(Subscription, id)
-
-  @doc """
-  Creates a subscription.
-
-  ## Examples
-
-      iex> create_subscription(%{field: value})
-      {:ok, %Subscription{}}
-
-      iex> create_subscription(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_subscription(attrs \\ %{}) do
-    %Subscription{}
-    |> Subscription.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Updates a subscription.
-
-  ## Examples
-
-      iex> update_subscription(subscription, %{field: new_value})
-      {:ok, %Subscription{}}
-
-      iex> update_subscription(subscription, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_subscription(%Subscription{} = subscription, attrs) do
-    subscription
-    |> Subscription.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a subscription.
-
-  ## Examples
-
-      iex> delete_subscription(subscription)
-      {:ok, %Subscription{}}
-
-      iex> delete_subscription(subscription)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_subscription(%Subscription{} = subscription) do
-    Repo.delete(subscription)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking subscription changes.
-
-  ## Examples
-
-      iex> change_subscription(subscription)
-      %Ecto.Changeset{data: %Subscription{}}
-
-  """
-  def change_subscription(%Subscription{} = subscription, attrs \\ %{}) do
-    Subscription.changeset(subscription, attrs)
+    @stripe_service.Customer.update(customer_stripe_id, %{
+      invoice_settings: %{default_payment_method: payment_method.id}
+    })
   end
 end

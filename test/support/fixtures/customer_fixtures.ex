@@ -3,16 +3,20 @@ defmodule StripeSetup.CustomerFixtures do
   This module defines test helpers for creating
   entities via the `StripeSetup.Billing` context.
   """
+  import StripeSetup.AccountsFixtures
 
   @doc """
   Generate a customer.
   """
   def customer_fixture(attrs \\ %{}) do
+    user_id = user_fixture().id
+
     {:ok, customer} =
       attrs
       |> Enum.into(%{
         default_source: "some default_source",
-        stripe_id: "some stripe_id"
+        stripe_id: Ecto.UUID.generate(),
+        user_id: Map.get(attrs, :user_id, user_id)
       })
       |> StripeSetup.Billing.Customers.create_customer()
 

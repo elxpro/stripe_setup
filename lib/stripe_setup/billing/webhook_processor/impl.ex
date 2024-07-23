@@ -5,7 +5,9 @@ defmodule StripeSetup.Billing.WebhookProcessor.Impl do
 
   def sync_event(event) do
     Event.notify_subscribers(event)
+
     sync(event.type)
+    |> dbg()
   end
 
   def subscribe_on_webhook_received, do: Event.subscribe_on_webhook_received()
@@ -22,4 +24,15 @@ defmodule StripeSetup.Billing.WebhookProcessor.Impl do
   defp sync("customer.subscription.deleted"), do: nil
   defp sync("customer.subscription.created"), do: nil
   defp sync(_), do: nil
+
+  #   def handle_info(%{event: event}, state) do
+  # notify_subscribers(event)
+  # case event.type do
+  # # ...other code
+  # "customer.subscription.updated" -> HandleSubscriptions.update_subscription(event.data.object)
+  # "customer.subscription.deleted" -> HandleSubscriptions.update_subscription(event.data.object)
+  # "customer.subscription.created" -> HandleSubscriptions.create_subscription(event.data.object)
+  # _ -> nil
+  # end
+  # end
 end

@@ -226,4 +226,35 @@ defmodule StripeSetupWeb.UserAuth do
   defp maybe_store_return_to(conn), do: conn
 
   defp signed_in_path(_conn), do: ~p"/"
+
+  @doc """
+  Used for routes that require the user to to have an active subscription.
+  Note that this first looks for a current_user. If current_user is not
+  found, it just returns conn and expects require_authenticated_user/2
+  to handle it.
+  This checks for a subscription on every request but the result could be stored
+  a cookie.
+  """
+  def require_active_subscription(conn, _opts) do
+    case conn.assigns[:current_user] do
+      %{id: user_id} ->
+        user_id
+        |> StripeSetup.Billing.Subscriptions.get_active_subscription_for_user()
+        |> handle_inactive_subscription(conn)
+
+      _ ->
+        conn
+    end
+  end
+
+  defp handle_inactive_subscription(%StripeSetup.Billing.Subscriptions.Subscription{}, conn),
+    do: conn
+
+  defp handle_inactive_subscription(_, conn) do
+    conn
+    |> put_flash(:error, "You need an active subscription")
+    |> maybe_store_return_to()
+    |> redirect(to: ~p"/subscriptions/new")
+    |> halt()
+  end
 end

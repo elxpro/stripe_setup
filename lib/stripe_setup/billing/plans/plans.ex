@@ -97,4 +97,37 @@ defmodule StripeSetup.Billing.Plans do
   def change_plan(%Plan{} = plan, attrs \\ %{}) do
     Plan.changeset(plan, attrs)
   end
+
+  @doc """
+  Gets a single plan by Stripe Id.
+
+  Raises `Ecto.NoResultsError` if the Plan does not exist.
+  ## Examples
+  iex> get_plan_by_stripe_id!(123)
+  %Plan{}
+  iex> get_plan_by_stripe_id!(456)
+  ** (Ecto.NoResultsError)
+  """
+  def get_plan_by_stripe_id!(stripe_id), do: Repo.get_by!(Plan, stripe_id: stripe_id)
+
+  @doc """
+  Returns the list of plans with produt name.
+  ## Examples
+  iex> list_plans_for_subscription_page()
+  [%Plan{}, ...]
+  """
+  def list_plans_for_subscription_page do
+    from(
+      p in Plan,
+      join: pp in assoc(p, :product),
+      select: %{
+        period: p.stripe_plan_name,
+        name: pp.stripe_product_name,
+        id: p.id,
+        amount: p.amount
+      },
+      order_by: [p.amount, p.stripe_plan_name]
+    )
+    |> Repo.all()
+  end
 end

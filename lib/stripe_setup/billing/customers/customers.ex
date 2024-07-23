@@ -97,4 +97,28 @@ defmodule StripeSetup.Billing.Customers do
   def change_customer(%Customer{} = customer, attrs \\ %{}) do
     Customer.changeset(customer, attrs)
   end
+
+  @doc """
+  Gets a single customer by Stripe Id.
+  Raises `Ecto.NoResultsError` if the Customer does not exist.
+  ## Examples
+  iex> get_customer_by_stripe_id!(123)
+  %Customer{}
+  iex> get_customer_by_stripe_id!(456)
+  ** (Ecto.NoResultsError)
+  """
+  def get_customer_by_stripe_id!(stripe_id), do: Repo.get_by!(Customer, stripe_id: stripe_id)
+
+  @doc """
+  Gets a single customer for a user_id.
+  Returns nil if the Customer does not exist.
+  ## Examples
+  iex> get_billing_customer_for_user(%User{id: 123})
+  %Customer{}
+  iex> get_billing_customer_for_user(%User{id: 456})
+  nil
+  """
+  def get_billing_customer_for_user(user_id) do
+    Repo.get_by(Customer, user_id: user_id)
+  end
 end

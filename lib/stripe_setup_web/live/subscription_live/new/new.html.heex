@@ -1,0 +1,41 @@
+<div id="checkout-new" class="container max-w-md mx-auto">
+  <form
+    action="#"
+    method="post"
+    phx-hook="InitCheckout"
+    id="payment-form"
+    data-public-key={@public_key}
+  >
+    <.input type="select" id="plan_id" name="plan_id" options={@products} value="" />
+
+    <label for="card-name" class="block my-2 font-semibold">
+      Your Name (same as your credit card)
+    </label>
+    <input
+      type="text"
+      name="card-name"
+      id="card-name"
+      class="form-input"
+      placeholder="Ex. James Bond"
+      required
+    />
+    <div class="mb-4 form-row">
+      <label for="card-element" class="block my-2 font-semibold">
+        Credit or debit card
+      </label>
+      <div id="card-element" class="form-input" phx-update="ignore">
+        <!-- A Stripe Element will be inserted here. -->
+      </div>
+      <!-- Used to display form errors. -->
+      <div id="card-errors" class="mt-4 text-white bg-yellow-600 alert" role="alert">
+        <%= @error_message %>
+      </div>
+    </div>
+    <button id="submit" phx-disabled-with="paying" class="w-full btn btn-primary">
+      <%= if @loading do %>
+        <div class="w-4 h-4 spinner"></div>
+      <% end %>
+      <span id="button-text">Pay</span><span id="order-amount"></span>
+    </button>
+  </form>
+</div>

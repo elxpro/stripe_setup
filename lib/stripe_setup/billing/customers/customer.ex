@@ -8,14 +8,14 @@ defmodule StripeSetup.Billing.Customers.Customer do
     field :default_source, :string
     field :stripe_id, :string
     belongs_to :user, StripeSetup.Accounts.User
-    has_many :subscriptions, StripeSetup.Billing.Subscription
+    has_many :subscriptions, StripeSetup.Billing.Subscriptions.Subscription
     timestamps()
   end
 
   @doc false
   def changeset(customer, attrs) do
     customer
-    |> cast(attrs, [:stripe_id, :default_source])
+    |> cast(attrs, [:stripe_id, :default_source, :user_id])
     |> validate_required([:stripe_id])
     |> unique_constraint(:stripe_id, name: :billing_customers_stripe_id_index)
   end
